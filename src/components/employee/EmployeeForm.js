@@ -1,5 +1,6 @@
 import React,{useState,useEffect} from 'react'
-import { useNavigate} from 'react-router-dom'
+import { useNavigate,useLocation} from 'react-router-dom'
+import { useSelector } from 'react-redux'
 const EmployeeForm = () => {
   const[name,setName] = useState("")
   const[email,setemail] = useState("")
@@ -9,11 +10,10 @@ const EmployeeForm = () => {
   const[course,setCourse] = useState([]);
   const[image,setImage] = useState(null)
   const[error,setError] = useState(null)
-  const[submit,setSubmit] = useState(true)
+  const id = useSelector((state)=>state.employee.id)
+  const updateStatus = useSelector((state)=>state.employee.update)
   const navigate = useNavigate();
-  const id = localStorage.getItem("employeeId")
-  
-  //console.log(state)
+  console.log(id)
   const token = localStorage.getItem("token")
    
 useEffect(()=>{
@@ -34,12 +34,10 @@ useEffect(()=>{
     setMobile(data.Mobile);
     setDesignation(data.Designation);
     setGender(data.Gender);
-    setCourse(data.Course);
-    setImage(data.Image)
-    setSubmit(false)
+   
    }
     catch(err){
-      setError(err)
+      setError(err.message)
     }
   }
   fetchEmployeeData();
@@ -90,7 +88,7 @@ const handleSubmit = async(e)=>{
     formData.append("gender",gender)
     formData.append("course",course.toString())
     formData.append("createDate",date)
-    if(submit===true){
+    if(!updateStatus){
   const res1 = await fetch("http://localhost:8000/api/v1/employee",{
     method:"post",
      body: formData,
@@ -100,6 +98,7 @@ const handleSubmit = async(e)=>{
   })
   const data1 = await res1.json();
   console.log(data1)
+  
   setCourse("")
 setName("");
 setDesignation("")
@@ -107,8 +106,8 @@ setGender("");
 setImage("");
 setMobile("");
 setemail("")
-navigate("/list")
-}
+
+    }
 else{
   
   const res2  = await fetch(`http://localhost:8000/api/v1/updateEmployee/${id}`,{
@@ -120,6 +119,7 @@ else{
   })
   const data2 = await res2.json();
   console.log(data2)
+  
   setCourse("")
 setName("");
 setDesignation("")
@@ -127,7 +127,7 @@ setGender("");
 setImage("");
 setMobile("");
 setemail("")
-navigate("/list")
+
 }
 }
 else{
@@ -136,7 +136,7 @@ else{
 else{
 setError("please choose an image")
 }
-
+navigate("/list")
 } 
 
   return (
@@ -219,8 +219,8 @@ setError("please choose an image")
                       <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Image Upload</label>
                       <input type="file" accept="image/*"  onChange={handleImage} className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required=""/>
                   </div>
-                  {error&&<p>{error}</p>}
-                  <button type="submit" className="btn btn-primary w-full" onClick={handleSubmit}>{submit?"Submit":"Update"}</button>
+                  {/* {error&&<p>{error}</p>} */}
+                  {updateStatus?<button type="submit" className="btn btn-primary w-full" onClick={handleSubmit}>Update</button>:<button type="submit" className="btn btn-primary w-full" onClick={handleSubmit}>Submit</button>}
                   
               </form>
           </div>

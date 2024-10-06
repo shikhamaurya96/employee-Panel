@@ -1,11 +1,15 @@
 import React,{useState,useEffect} from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux';
+import { setEmployeeId,setUpdateStatus } from '../store/employeeSlice';
 const EmployeeList = () => {
-  const[list,setList] = useState(null);
+  const[list,setList] = useState([]);
   const[loading,setLoading] = useState(true);
   const[search,setSearch] = useState("")
   const[error,setError] = useState(null)
+  
   const navigate = useNavigate()
+  const dispatch = useDispatch()
  const token = localStorage.getItem("token")
 useEffect(()=>{
       fetchList();
@@ -30,6 +34,7 @@ catch(err){
 }
   const handleCreateEmployee = ()=>{
     navigate("/employee")
+    dispatch(setUpdateStatus(false))
   }
   const handleDelete = async(id)=>{
     try{
@@ -51,7 +56,10 @@ catch(err){
     }
   }
   const handleEdit = (id)=>{
-    localStorage.setItem("employeeId",id)
+    //localStorage.setItem("employeeId",id)
+    dispatch(setEmployeeId(id))
+    dispatch(setUpdateStatus(true))
+    console.log(id)
      navigate("/employee")
   }
   const handleSearchButton = async()=>{
@@ -73,7 +81,7 @@ catch(err){
   return (
     <div className='mt-20  '>
 <header>
-    <nav class="bg-white border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800">
+    <nav className="bg-white border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800">
         <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
             <h1 className='text-xl ml-2'>Employee List</h1>
             
