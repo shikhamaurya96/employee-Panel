@@ -10,11 +10,11 @@ const Header = () => {
   return (
     <>
     <nav className="bg-neutral text-neutral-content fixed w-full z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
-  <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+  <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-2">
     <div className='flex space-x-8'>
-    <a href="https://flowbite.com/" className="flex items-center space-x-8 rtl:space-x-reverse font-bold text-xl">
+    <Link to={"/"} className="flex items-center space-x-8 rtl:space-x-reverse font-bold text-xl">
       Home
-  </a>
+  </Link>
   <Link to={"/list"} className="flex items-center space-x-3 rtl:space-x-reverse  text-lg">
       Employee List
   </Link>

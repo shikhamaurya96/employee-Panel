@@ -59,12 +59,13 @@ catch(err){
     //localStorage.setItem("employeeId",id)
     dispatch(setEmployeeId(id))
     dispatch(setUpdateStatus(true))
+    localStorage.setItem("empId",id)
     console.log(id)
      navigate("/employee")
   }
   const handleSearchButton = async()=>{
     try{
-     const resp = await fetch(`http://localhost:8000/api/v1/employee/search?name=${search}`,{
+     const resp = await fetch(`http://localhost:8000/api/v1/list/search?query=${search}`,{
         method:"get",
         headers:{
           "content-type":"application/json",
@@ -73,31 +74,32 @@ catch(err){
      })
      const data = await resp.json();
      console.log(data)
+     setList(data)
     }
     catch(err){
       console.log("error",err)
     }
   }
   return (
-    <div className='mt-20  '>
+    <div className='mt-16  '>
 <header>
     <nav className="bg-white border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800">
         <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
-            <h1 className='text-xl ml-2'>Employee List</h1>
+            <h1 className='text-lg ml-2'>Employee List</h1>
             
             <div class="justify-between items-center w-full lg:flex lg:w-auto lg:order-1" id="mobile-menu-2">
                 <ul class="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
                 
                     <li>
-                        <p className='mt-4'>Total Count : {list?.length}</p>
+                        <p className='mt-2'>Total Count : {list?.length}</p>
                     </li>
                     <li>
-                        <button className='btn btn-primary' onClick={handleCreateEmployee}>Create Employee</button>
+                        <button className='bg-blue-600 text-white p-2 rounded-md' onClick={handleCreateEmployee}>Create Employee</button>
                     </li>
                     <li>
-                    <div className="join">
-  <input className="input input-bordered join-item focus:outline-none" placeholder="Search" value={search} onChange={(e)=>setSearch(e.target.value)}/>
-  <button className="btn join-item rounded-r-full btn-primary" onClick={handleSearchButton}>Search</button>
+                    <div className="join mr-0">
+  <input className="p-2 border join-item focus:outline-none " placeholder="Search" value={search} onChange={(e)=>setSearch(e.target.value)}/>
+  <button className="bg-blue-600 text-white rounded-md p-1 join-item " onClick={handleSearchButton}>Search</button>
 </div>
                     </li> 
                 </ul>
@@ -132,7 +134,7 @@ catch(err){
         <td className='text-sm'>{data.Gender}</td>
         <td className='text-sm'>{data.Course}</td>
         <td className='text-sm'>{data.CreateDate}</td>
-        <td className='text-sm'><button className='btn btn-neutral mr-2' onClick={()=>handleEdit(data._id)}>Edit</button><button className='btn btn-neutral' onClick={()=>handleDelete(data._id)}>Delete</button></td>
+        <td className='text-sm'><button className='bg-black text-white p-2 rounded-md mr-2 ' onClick={()=>handleEdit(data._id)}>Edit</button><button className='bg-black text-white p-2 rounded-md' onClick={()=>handleDelete(data._id)}>Delete</button></td>
       </tr>
       </tbody>)}
     
