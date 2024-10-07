@@ -65,6 +65,9 @@ catch(err){
   }
   const handleSearchButton = async()=>{
     try{
+      if(search===""){
+        return fetchList();
+      }
      const resp = await fetch(`http://localhost:8000/api/v1/list/search?query=${search}`,{
         method:"get",
         headers:{

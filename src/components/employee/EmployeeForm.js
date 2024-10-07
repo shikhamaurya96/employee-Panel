@@ -36,6 +36,11 @@ useEffect(()=>{
     setMobile(data.Mobile);
     setDesignation(data.Designation);
     setGender(data.Gender);
+    console.log(data.Course)
+    const course = data.Course.split(",")
+    console.log(course)
+    setImage(course.Image)
+    setCourse(course)
   }
    }
     catch(err){
@@ -61,7 +66,7 @@ if (/^\d{0,10}$/.test(val)) {
 
     // If the course is already selected, remove it; otherwise, add it to the selectedCourses array
     if (course.includes(selectedCourse)) {
-      setCourse(course.filter((selectedCourse) => selectedCourse !== selectedCourse));
+      setCourse(course.filter((myselectedCourse) => myselectedCourse !== selectedCourse));
     } else {
       setCourse([...course, selectedCourse]);
     }
@@ -79,11 +84,15 @@ const handleSubmit = async(e)=>{
   console.log(course)
   console.log(designation)
   const emailValidate = emailValidation(email);
-  if(email){
+  if(emailValidate){
     setError(emailValidate);
+    console.log(emailValidate)
     return
   }
+  
+  if(name!==""&&designation!==""&&gender!==""&&course.length!==0){
   if(image){
+  
     if(mobile.length===10){
     const formData = new FormData();
     const date = new Date().toUTCString();
@@ -96,6 +105,7 @@ const handleSubmit = async(e)=>{
     formData.append("course",course.toString())
     formData.append("createDate",date)
     if(!updateStatus){
+      console.log("submit")
   const res1 = await fetch("http://localhost:8000/api/v1/employee",{
     method:"post",
      body: formData,
@@ -113,11 +123,11 @@ setGender("");
 setImage("");
 setMobile("");
 setemail("")
-
+navigate("/list")
     }
-else{
-  
-  const res2  = await fetch(`http://localhost:8000/api/v1/updateEmployee/${id}`,{
+else if(updateStatus){
+  console.log("update")
+  const res2  = await fetch(`http://localhost:8000/api/v1/updateEmployee/${myId}`,{
     method:"put",
     body:formData,
     headers:{
@@ -134,7 +144,7 @@ setGender("");
 setImage("");
 setMobile("");
 setemail("")
-
+navigate("/list")
 }
 }
 else{
@@ -143,7 +153,10 @@ else{
 else{
 setError("please choose an image")
 }
-navigate("/list")
+  }
+  else{
+    setError("please fill all the fields")
+  }
 } 
 
   return (
